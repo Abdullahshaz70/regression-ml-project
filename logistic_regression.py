@@ -64,6 +64,7 @@ def forward_pass(X, w, b):
     return sigmoid(z)
 
 
+
 def compute_loss(y, y_hat):
     y_hat = np.clip(y_hat, 1e-15, 1 - 1e-15)
     return (-1 / len(y)) * np.sum(y * np.log(y_hat) + (1 - y) * np.log(1 - y_hat))
