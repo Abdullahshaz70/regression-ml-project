@@ -4,9 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
-# ─────────────────────────────────────────────
-# 1. CONFIGURATION
-# ─────────────────────────────────────────────
+
 ALPHA       = 0.1
 EPSILON     = 1e-4
 ITERATIONS  = 1000
@@ -15,15 +13,9 @@ THRESHOLD   = 0.5
 THRESHOLDS  = [0.3, 0.4, 0.5, 0.6, 0.7]
 TARGET_COL  = 'diagnosis'
 
-# ─────────────────────────────────────────────
-# 2. LOAD & CLEAN DATA
-# ─────────────────────────────────────────────
 df = pd.read_csv("Breast_cancer_dataset.csv")
 df = df.drop(columns=['id'])
 
-# ─────────────────────────────────────────────
-# 3. FUNCTION DEFINITIONS
-# ─────────────────────────────────────────────
 
 def sigmoid(z):
     return 1 / (1 + np.exp(-z))
@@ -155,23 +147,16 @@ def k_fold_cross_validation(X, y, k=K_FOLDS):
     return accuracies
 
 
-# ─────────────────────────────────────────────
-# 4. MAIN EXECUTION
-# ─────────────────────────────────────────────
-
-# --- Data Preparation ---
 df                              = shuffle_data(df)
 X_train, Y_train, X_test, Y_test = train_test_split(df, TARGET_COL)
 X_train, X_test                 = normalize(X_train, X_test)
 
-# --- Train Model ---
 print("\n" + "="*45)
 print("  MODEL TRAINING")
 print("="*45)
 w, b        = initialize_params(X_train.shape[1])
 w, b, losses = train(X_train, Y_train, w, b)
 
-# --- Plot Training Loss ---
 plt.figure()
 plt.plot(losses)
 plt.xlabel("Iterations")
@@ -180,7 +165,6 @@ plt.title("Training Loss vs Iterations")
 plt.tight_layout()
 plt.show()
 
-# --- Evaluate on Test Set ---
 print("\n" + "="*45)
 print("  TEST SET EVALUATION (threshold=0.5)")
 print("="*45)
@@ -193,10 +177,9 @@ print(f"  FN={FN}  TN={TN}")
 print()
 print_scores(Accuracy, Precision, Recall, F1)
 
-# --- K-Fold Cross Validation ---
 k_fold_cross_validation(X_train, Y_train)
 
-# --- Sklearn Comparison ---
+
 print("\n" + "="*45)
 print("  SKLEARN COMPARISON")
 print("="*45)
@@ -208,7 +191,6 @@ print(f"  Sklearn Precision : {precision_score(Y_test, sk_pred):.4f}")
 print(f"  Sklearn Recall    : {recall_score(Y_test, sk_pred):.4f}")
 print(f"  Sklearn F1        : {f1_score(Y_test, sk_pred):.4f}")
 
-# --- Threshold Tuning ---
 print("\n" + "="*45)
 print("  THRESHOLD TUNING")
 print("="*45)
@@ -225,7 +207,6 @@ for t in THRESHOLDS:
     recalls.append(Recall)
     f1s.append(F1)
 
-# --- Plot Threshold Metrics ---
 plt.figure()
 plt.plot(THRESHOLDS, accuracies,  label='Accuracy')
 plt.plot(THRESHOLDS, precisions,  label='Precision')

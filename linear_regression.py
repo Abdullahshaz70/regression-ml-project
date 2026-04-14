@@ -16,21 +16,17 @@ epsilon = 1e-4
 alpha = [0.0001, 0.001, 0.01, 0.1, 1.0]
 
 
-# Replace null values with median of each column
 def remove_null_values():
     for column in df.columns:
         if df[column].isnull().sum() > 0:
             median_value = df[column].median()
             df.fillna(median_value, inplace=True)
 
-
-# Shuffle the dataset randomly
 def shuffle_Data():
     global df
     df = df.sample(frac=1, random_state=42).reset_index(drop=True)
 
 
-# Split dataset manually into 80% train and 20% test
 def training_testing_splitting():
     n = len(df)
     train_data_size = int(0.8 * n)
@@ -46,25 +42,21 @@ def training_testing_splitting():
     return X_train, Y_train, X_test, Y_test
 
 
-# Initialize weights to zero and bias to zero
 def initillize_params():
     w = np.zeros(13)
     b = 0
     return w, b
 
 
-# Linear prediction: Y = X @ w + b
 def predict(X, w, b):
     return X @ w + b
 
 
-# Squared error loss (MSE)
 def compute_loss(y_true, y_pred):
     n = len(y_true)
     return (1/n) * np.sum((y_true - y_pred)**2)
 
 
-# Gradient of loss with respect to w and b
 def compute_gradients(X, y_true, y_pred):
     n = len(y_true)
     error = y_true - y_pred
@@ -73,7 +65,6 @@ def compute_gradients(X, y_true, y_pred):
     return gradient_w, gradient_b
 
 
-# Gradient descent loop with convergence check
 def gradient_descent(X, y, w, b, learning_rate, epsilon):
     iterations = 1000
     losses = []
@@ -130,7 +121,6 @@ def classification_metrics(Y_test, y_pred):
     print(f"Confusion Matrix:\n{cm}")
 
 
-# ─── Main Loop: Experiment with 5 different learning rates ───────────────────
 
 for i in range(len(alpha)):
     print(f"\n{'='*50}")
@@ -160,7 +150,6 @@ for i in range(len(alpha)):
     print(f"Learned b: {b:.4f}")
     print(f"Learned w: {w}")
 
-    # Plot training loss vs iterations
     plt.plot(losses)
     plt.xlabel("Iterations")
     plt.ylabel("Loss (MSE)")
@@ -168,10 +157,10 @@ for i in range(len(alpha)):
     plt.grid(True)
     plt.show()
 
-    # Evaluate on test data
+
     evaluate(X_test, Y_test, w, b)
 
-    # Compare with sklearn
+
     sklearn_model = LinearRegression()
     sklearn_model.fit(X_train, Y_train)
     sklearn_pred = sklearn_model.predict(X_test)
@@ -182,7 +171,7 @@ for i in range(len(alpha)):
     print(f"\nYour Model MSE:    {your_loss:.4f}")
     print(f"Sklearn Model MSE: {sklearn_loss:.4f}")
 
-    # Classification metrics
+
     y_pred_test = predict(X_test, w, b)
     classification_metrics(Y_test, y_pred_test)
 
